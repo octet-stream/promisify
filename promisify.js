@@ -1,3 +1,7 @@
+const {isString} = require("util")
+
+const {isObject, isArrayOf} = require("./helper")
+
 const keys = Object.keys
 const entries = Object.entries
 const isArray = Array.isArray
@@ -40,9 +44,12 @@ const promisify = (target, ctx = null) => function(...args) {
  * @return object
  */
 function all(targets) {
+  if (!isObject(targets)) {
+    throw new TypeError("Target functions should be passed as an object.")
+  }
+
   const res = {}
 
-  // TODO: Improve function logic
   for (const [name, target] of entries(targets)) {
     if (!/.+(Sync|Stream|Promise)$/.test(name)) {
       res[name] = promisify(target)
@@ -52,17 +59,37 @@ function all(targets) {
   return res
 }
 
+/**
+ * @param object targets
+ * @param string[] list
+ *
+ * @return object
+ */
 function some(targets, list = []) {
   if (!isArray(list)) {
     throw new TypeError("The list of target function should be an array")
   }
 
+  if (isArrayOf(list, isString)) {
+    throw new TypeError("Each element in the list should be a string.")
+  }
+
   return all(keys(targets).filter(target => list.includes(target)))
 }
 
+/**
+ * @param object targets
+ * @param string[] list
+ *
+ * @return object
+ */
 function except(targets, list = []) {
   if (!isArray(list)) {
     throw new TypeError("The list of target function should be an array")
+  }
+
+  if (isArrayOf(list, isString)) {
+    throw new TypeError("Each element in the list should be a string.")
   }
 
   return all(keys(targets).filter(target => list.includes(target) === false))
