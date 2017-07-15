@@ -1,4 +1,5 @@
-const values = Object.values
+const keys = Object.keys
+const entries = Object.entries
 const isArray = Array.isArray
 
 /**
@@ -42,7 +43,7 @@ function all(targets) {
   const res = {}
 
   // TODO: Improve function logic
-  for (const [name, target] of values(targets)) {
+  for (const [name, target] of entries(targets)) {
     if (!/.+(Sync|Stream|Promise)$/.test(name)) {
       res[name] = promisify(target)
     }
@@ -56,7 +57,7 @@ function some(targets, list = []) {
     throw new TypeError("The list of target function should be an array")
   }
 
-  return all(values(targets).filter(target => list.includes(target)))
+  return all(keys(targets).filter(target => list.includes(target)))
 }
 
 function except(targets, list = []) {
@@ -64,11 +65,11 @@ function except(targets, list = []) {
     throw new TypeError("The list of target function should be an array")
   }
 
-  return all(values(targets).filter(target => list.includes(target) === false))
+  return all(keys(targets).filter(target => list.includes(target) === false))
 }
 
 module.exports = promisify
-exports.default = promisify
-exports.all = all
-exports.some = some
-exports.except = except
+module.exports.default = promisify
+module.exports.all = all
+module.exports.some = some
+module.exports.except = except
