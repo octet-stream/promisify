@@ -65,9 +65,9 @@ function all(targets) {
  *
  * @return object
  */
-function some(targets, list = []) {
+function some(targets, list) {
   if (!isArray(list)) {
-    throw new TypeError("The list of target function should be an array")
+    throw new TypeError("The list of target function should be an array.")
   }
 
   if (isArrayOf(list, isString)) {
@@ -83,9 +83,9 @@ function some(targets, list = []) {
  *
  * @return object
  */
-function except(targets, list = []) {
+function except(targets, list) {
   if (!isArray(list)) {
-    throw new TypeError("The list of target function should be an array")
+    throw new TypeError("The list of target function should be an array.")
   }
 
   if (isArrayOf(list, isString)) {
