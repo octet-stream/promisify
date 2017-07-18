@@ -4,8 +4,30 @@
 
 ### promisify(target[, ctx]) -> function
 
-### promisify.all(targets) -> object
+Promisify Node.js callback-style function with native Promise
 
-### promisify.some(targets, list) -> object
+  * function target - function, that will be wrap with a Promise
+  * any ctx - "this" context for a target function
 
-### promisify.except(targets, list) -> object
+### promisify.all(targets[, ctx]) -> object
+
+Promisify all functions from given object
+
+  * object **targets** – object of target functinos
+  * any ctx - "this" context for all wrapped functions
+
+### promisify.some(targets, list[, ctx]) -> object
+
+Promisify some functions from given object, that was specified in list
+
+  * object **targets** – object of target functinos
+  * string[] list – an array of target functions names
+  * any ctx - "this" context for all wrapped functions
+
+### promisify.except(targets, list[, ctx]) -> object
+
+Promisify all functions from given object, except the ones from list
+
+  * object **targets** – object of target functinos
+  * string[] list – an array of target functions names
+  * any ctx - "this" context for all wrapped functions

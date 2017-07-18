@@ -40,10 +40,11 @@ const promisify = (target, ctx = null) => function(...args) {
  * Promisify all given methods
  *
  * @param object targets - object that contains pairs of name => target
+ * @param any ctx
  *
  * @return object
  */
-function all(targets) {
+function all(targets, ctx) {
   if (!isObject(targets)) {
     throw new TypeError("Target functions should be passed as an object.")
   }
@@ -52,7 +53,7 @@ function all(targets) {
 
   for (const [name, target] of entries(targets)) {
     if (!/.+(Sync|Stream|Promise)$/.test(name)) {
-      res[name] = promisify(target)
+      res[name] = promisify(target, ctx)
     }
   }
 
@@ -62,10 +63,11 @@ function all(targets) {
 /**
  * @param object targets
  * @param string[] list
+ * @param any ctx
  *
  * @return object
  */
-function some(targets, list) {
+function some(targets, list, ctx) {
   if (!isArray(list)) {
     throw new TypeError("The list of target function should be an array.")
   }
@@ -74,16 +76,17 @@ function some(targets, list) {
     throw new TypeError("Each element in the list should be a string.")
   }
 
-  return all(keys(targets).filter(target => list.includes(target)))
+  return all(keys(targets).filter(target => list.includes(target)), ctx)
 }
 
 /**
  * @param object targets
  * @param string[] list
+ * @param any ctx
  *
  * @return object
  */
-function except(targets, list) {
+function except(targets, list, ctx) {
   if (!isArray(list)) {
     throw new TypeError("The list of target function should be an array.")
   }
@@ -92,7 +95,7 @@ function except(targets, list) {
     throw new TypeError("Each element in the list should be a string.")
   }
 
-  return all(keys(targets).filter(target => list.includes(target) === false))
+  return all(keys(targets).filter(target => !list.includes(target)), ctx)
 }
 
 module.exports = promisify
