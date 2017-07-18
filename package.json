@@ -1,7 +1,7 @@
 {
   "name": "@octetstream/promisify",
   "version": "1.0.0",
-  "description": "Dependency free, thinnest promisify library.",
+  "description": "Tiny, dependency free promisify library.",
   "main": "promisify.js",
   "author": "Nick K.",
   "license": "MIT",
