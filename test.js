@@ -4,6 +4,7 @@ const test = require("ava")
 const {spy} = require("sinon")
 
 const pfy = require("./promisify")
+const {isArrayOf, isObject} = require("./helper")
 
 test.beforeEach(t => {
   const noop = reject => function noop(val, cb) {
@@ -20,8 +21,27 @@ test.beforeEach(t => {
 
   const getLastElement = arr => [...arr].pop()
 
+  const functions = {
+    foo(cb) {
+      cb(null, "foo")
+    },
+
+    bar(cb) {
+      cb(null, "bar")
+    },
+
+    boo(cb) {
+      cb(null, "boo")
+    },
+
+    fooSync() {
+      return "foo"
+    }
+  }
+
   t.context = {
     getLastElement,
+    functions,
     noop
   }
 })
@@ -87,6 +107,57 @@ test("Should invoke function with a given context", async t => {
   t.true(res instanceof NoopClass)
 })
 
+test("Should wrap all function from given object", t => {
+  t.plan(1)
+
+  const functions = t.context.functions
+
+  const keys = Object
+    .keys(functions)
+    .filter(name => !/.+(Sync|Stream|Promise)$/.test(name))
+
+  const actual = Object.keys(pfy.all(functions))
+
+  t.deepEqual(keys, actual)
+})
+
+test("Should wrap some functions, that were specified in a list", t => {
+  t.plan(1)
+
+  const functions = t.context.functions
+
+  const list = ["foo"]
+
+  const keys = Object
+    .keys(functions)
+    .filter(name => list.includes(name))
+    .filter(name => !/.+(Sync|Stream|Promise)$/.test(name))
+
+  const actual = Object.keys(pfy.some(functions, list))
+
+  t.deepEqual(keys, actual)
+})
+
+test(
+  "Should wrap all functions, EXCEPT the ones that were specified in a list",
+  t => {
+    t.plan(1)
+
+    const functions = t.context.functions
+
+    const list = ["foo"]
+
+    const keys = Object
+      .keys(functions)
+      .filter(name => !list.includes(name))
+      .filter(name => !/.+(Sync|Stream|Promise)$/.test(name))
+
+    const actual = Object.keys(pfy.except(functions, list))
+
+    t.deepEqual(keys, actual)
+  }
+)
+
 test("Should thow an error when \"reject\" argument is truthy.", async t => {
   t.plan(1)
 
@@ -97,3 +168,56 @@ test("Should thow an error when \"reject\" argument is truthy.", async t => {
   )
 })
 
+test(
+  "Should throw an error when promisify.all takes non-object value " +
+  "first argument",
+  t => {
+    t.plan(3)
+
+    const trap = () => pfy.all("oops, seems like this is not an object!")
+
+    const err = t.throws(trap)
+
+    t.true(err instanceof TypeError)
+    t.is(err.message, "Target functions should be passed as an object.")
+  }
+)
+
+// Tests for helpers
+test("isObject: Should return true when passed plain object", t => {
+  t.plan(1)
+
+  t.true(isObject({}))
+})
+
+test("isObject: Should return flase when passed non-object value", t => {
+  t.plan(1)
+
+  t.false(isObject(3310))
+})
+
+test(
+  "isArrayOf: Should return true when types of each elements are correct",
+  t => {
+    t.plan(1)
+
+    const elements = ["earth pony", "unicorn", "pegasus", "alicorn"]
+
+    const predicate = val => typeof val === "string"
+
+    t.true(isArrayOf(elements, predicate))
+  }
+)
+
+test(
+  "isArrayOf: Should return false when one of elements have an incorrect type",
+  t => {
+    t.plan(1)
+
+    const elements = ["one", 2, "three"]
+
+    const predicate = val => typeof val === "string"
+
+    t.false(isArrayOf(elements, predicate))
+  }
+)

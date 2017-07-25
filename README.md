@@ -2,6 +2,10 @@
 
 Tiny, dependency free promisify library.
 
+[![devDependencies Status](https://david-dm.org/octet-stream/promisify/dev-status.svg)](https://david-dm.org/octet-stream/promisify?type=dev)
+[![Build Status](https://travis-ci.org/octet-stream/promisify.svg?branch=master)](https://travis-ci.org/octet-stream/promisify)
+[![Code Coverage](https://codecov.io/github/octet-stream/promisify/coverage.svg?branch=master)](https://codecov.io/github/octet-stream/promisify?branch=master)
+
 ## API
 
 ### promisify(target[, ctx]) -> function

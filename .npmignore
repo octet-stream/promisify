@@ -2,6 +2,7 @@ node_modules
 coverage
 
 yarn.lock
+test.js
 
 .nyc_output
 .DS_Store

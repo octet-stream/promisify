@@ -1,18 +1,63 @@
 {
   "name": "@octetstream/promisify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tiny, dependency free promisify library.",
   "main": "promisify.js",
   "author": "Nick K.",
   "license": "MIT",
+  "keywords": [
+    "promise",
+    "promisify",
+    "promisify-all",
+    "promisify-some",
+    "promisify-except",
+    "then",
+    "thenify",
+    "thenify-all",
+    "thenify-some",
+    "thenify-except",
+    "callback",
+    "cb",
+    "fulfill",
+    "wrap",
+    "wrapper",
+    "async",
+    "await",
+    "async-await",
+    "asyncawait",
+    "es6",
+    "es2015",
+    "dependency-free"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/octet-stream/promisify.git"
+  },
+  "bugs": {
+    "url": "https://github.com/octet-stream/promisify/issues"
+  },
+  "scripts": {
+    "lint": "node_modules/.bin/eslint test.js helper.js",
+    "test": "node_modules/.bin/ava test.js",
+    "codecov": "node_modules/.bin/codecov",
+    "coverage": "node_modules/.bin/nyc yarn test",
+    "report": "yarn coverage && node_modules/.bin/nyc report --reporter=html yarn test",
+    "report:ci": "node_modules/.bin/nyc report --reporter=lcov yarn test",
+    "ci": "yarn coverage && yarn report:ci && yarn codecov",
+    "precommit": "yarn lint",
+    "prepush": "yarn coverage && yarn report"
+  },
   "engines": {
     "node": ">=7.6"
   },
   "devDependencies": {
     "@octetstream/eslint-config": "1.0.1",
     "ava": "0.21.0",
+    "codecov": "2.2.0",
     "eslint": "3.19.x",
     "eslint-plugin-ava": "4.2.1",
+    "husky": "0.14.3",
+    "nyc": "11.0.3",
     "sinon": "2.3.8"
   }
 }

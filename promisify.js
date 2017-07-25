@@ -1,8 +1,7 @@
 const {isString} = require("util")
 
-const {isObject, isArrayOf} = require("./helper")
+const {isObject, isArrayOf, filter} = require("./helper")
 
-const keys = Object.keys
 const entries = Object.entries
 const isArray = Array.isArray
 
@@ -72,11 +71,11 @@ function some(targets, list, ctx) {
     throw new TypeError("The list of target function should be an array.")
   }
 
-  if (isArrayOf(list, isString)) {
+  if (!isArrayOf(list, isString)) {
     throw new TypeError("Each element in the list should be a string.")
   }
 
-  return all(keys(targets).filter(target => list.includes(target)), ctx)
+  return all(filter(targets, (_, name) => list.includes(name)), ctx)
 }
 
 /**
@@ -91,11 +90,11 @@ function except(targets, list, ctx) {
     throw new TypeError("The list of target function should be an array.")
   }
 
-  if (isArrayOf(list, isString)) {
+  if (!isArrayOf(list, isString)) {
     throw new TypeError("Each element in the list should be a string.")
   }
 
-  return all(keys(targets).filter(target => !list.includes(target)), ctx)
+  return all(filter(targets, (_, name) => !list.includes(name)), ctx)
 }
 
 module.exports = promisify
