@@ -1,4 +1,4 @@
-const entries = Object.entries
+const keys = Object.keys
 
 const isObject = obj => (
   Object.prototype.toString.call(obj).slice(8, -1).toLowerCase() === "object"
@@ -17,7 +17,9 @@ function isArrayOf(arr, predicate, ctx = null) {
 function filter(obj, predicate, ctx = null) {
   const res = {}
 
-  for (const [key, val] of entries(obj)) {
+  for (const key of keys(obj)) {
+    const val = obj[key]
+
     if (predicate.call(ctx, val, key, obj)) {
       res[key] = val
     }

@@ -48,7 +48,7 @@
     "prepush": "yarn coverage && yarn report"
   },
   "engines": {
-    "node": ">=7.6"
+    "node": ">=6"
   },
   "devDependencies": {
     "@octetstream/eslint-config": "1.0.1",

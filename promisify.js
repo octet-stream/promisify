@@ -2,7 +2,7 @@ const {isString} = require("util")
 
 const {isObject, isArrayOf, filter} = require("./helper")
 
-const entries = Object.entries
+const keys = Object.keys
 const isArray = Array.isArray
 
 /**
@@ -50,9 +50,9 @@ function all(targets, ctx) {
 
   const res = {}
 
-  for (const [name, target] of entries(targets)) {
+  for (const name of keys(targets)) {
     if (!/.+(Sync|Stream|Promise)$/.test(name)) {
-      res[name] = promisify(target, ctx)
+      res[name] = promisify(targets[name], ctx)
     }
   }
 
