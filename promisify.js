@@ -1,19 +1,20 @@
-const {isString} = require("util")
+const {isString, isObject} = require("util")
 
-const {isObject, isArrayOf, filter} = require("./helper")
+const {isArrayOf, map} = require("./helper")
 
-const keys = Object.keys
 const isArray = Array.isArray
+
+const filter = name => /.+(Sync|Stream|Promise)$/.test(name) === false
 
 /**
  * Promisify Node.js callback-style function
  *
- * @param function target – a callback-style function
+ * @param {function} target – a callback-style function
  *
- * @return function - promised function
+ * @return {function} - promised function
  *
- * Example
- * ```js
+ * @example
+ *
  * import fs from "fs"
  *
  * const readFile = promisify(fs.readFile)
@@ -23,7 +24,6 @@ const isArray = Array.isArray
  * const onRejected = err => console.error(err)
  *
  * readFile(__filename).then(onFulfilled, onRejected)
- * ```
  */
 const promisify = (target, ctx = null) => function(...args) {
   ctx || (ctx = this)
@@ -48,15 +48,7 @@ function all(targets, ctx) {
     throw new TypeError("Target functions should be passed as an object.")
   }
 
-  const res = {}
-
-  for (const name of keys(targets)) {
-    if (!/.+(Sync|Stream|Promise)$/.test(name)) {
-      res[name] = promisify(targets[name], ctx)
-    }
-  }
-
-  return res
+  return map(targets, (fn, name) => filter(name) ? promisify(fn, ctx) : fn)
 }
 
 /**
@@ -75,7 +67,11 @@ function some(targets, list, ctx) {
     throw new TypeError("Each element in the list should be a string.")
   }
 
-  return all(filter(targets, (_, name) => list.includes(name)), ctx)
+  return map(
+    targets, (fn, name) => (
+      filter(name) && list.includes(name) ? promisify(fn, ctx) : fn
+    )
+  )
 }
 
 /**
@@ -94,7 +90,11 @@ function except(targets, list, ctx) {
     throw new TypeError("Each element in the list should be a string.")
   }
 
-  return all(filter(targets, (_, name) => !list.includes(name)), ctx)
+  return map(
+    targets, (fn, name) => (
+      filter(name) && list.includes(name) === false ? promisify(fn, ctx) : fn
+    )
+  )
 }
 
 module.exports = promisify

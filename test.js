@@ -4,7 +4,7 @@ const test = require("ava")
 const {spy} = require("sinon")
 
 const pfy = require("./promisify")
-const {isArrayOf, isObject} = require("./helper")
+const {isArrayOf} = require("./helper")
 
 test.beforeEach(t => {
   const noop = reject => function noop(val, cb) {
@@ -35,7 +35,7 @@ test.beforeEach(t => {
     },
 
     fooSync() {
-      return "foo"
+      return "sync method"
     }
   }
 
@@ -44,12 +44,6 @@ test.beforeEach(t => {
     functions,
     noop
   }
-})
-
-test("Should be a function", t => {
-  t.plan(1)
-
-  t.true(isFunction(pfy))
 })
 
 test("Should return a promisify function", t => {
@@ -108,53 +102,57 @@ test("Should invoke function with a given context", async t => {
 })
 
 test("Should wrap all function from given object", t => {
-  t.plan(1)
+  t.plan(5)
 
   const functions = t.context.functions
 
-  const keys = Object
-    .keys(functions)
-    .filter(name => !/.+(Sync|Stream|Promise)$/.test(name))
+  const actual = pfy.all(functions)
 
-  const actual = Object.keys(pfy.all(functions))
+  t.true(actual.foo() instanceof Promise)
+  t.true(actual.bar() instanceof Promise)
+  t.true(actual.boo() instanceof Promise)
 
-  t.deepEqual(keys, actual)
+  t.false(actual.fooSync() instanceof Promise)
+
+  t.is(actual.fooSync(), "sync method")
 })
 
-test("Should wrap some functions, that were specified in a list", t => {
-  t.plan(1)
+test("Should wrap some functions that were specified in a list", t => {
+  t.plan(5)
 
   const functions = t.context.functions
 
-  const list = ["foo"]
+  const list = ["bar"]
 
-  const keys = Object
-    .keys(functions)
-    .filter(name => list.includes(name))
-    .filter(name => !/.+(Sync|Stream|Promise)$/.test(name))
+  const actual = pfy.some(functions, list)
 
-  const actual = Object.keys(pfy.some(functions, list))
+  t.true(actual.bar() instanceof Promise)
 
-  t.deepEqual(keys, actual)
+  t.false(actual.foo(() => {}) instanceof Promise)
+  t.false(actual.boo(() => {}) instanceof Promise)
+  t.false(actual.fooSync() instanceof Promise)
+
+  t.is(actual.fooSync(), "sync method")
 })
 
 test(
   "Should wrap all functions, EXCEPT the ones that were specified in a list",
   t => {
-    t.plan(1)
+    t.plan(5)
 
     const functions = t.context.functions
 
     const list = ["foo"]
 
-    const keys = Object
-      .keys(functions)
-      .filter(name => !list.includes(name))
-      .filter(name => !/.+(Sync|Stream|Promise)$/.test(name))
+    const actual = pfy.except(functions, list)
 
-    const actual = Object.keys(pfy.except(functions, list))
+    t.true(actual.bar() instanceof Promise)
+    t.true(actual.boo() instanceof Promise)
 
-    t.deepEqual(keys, actual)
+    t.false(actual.foo(() => {}) instanceof Promise)
+    t.false(actual.fooSync() instanceof Promise)
+
+    t.is(actual.fooSync(), "sync method")
   }
 )
 
@@ -184,18 +182,6 @@ test(
 )
 
 // Tests for helpers
-test("isObject: Should return true when passed plain object", t => {
-  t.plan(1)
-
-  t.true(isObject({}))
-})
-
-test("isObject: Should return flase when passed non-object value", t => {
-  t.plan(1)
-
-  t.false(isObject(3310))
-})
-
 test(
   "isArrayOf: Should return true when types of each elements are correct",
   t => {
