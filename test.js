@@ -7,7 +7,7 @@ const pfy = require("./promisify")
 const {isArrayOf} = require("./helper")
 
 test.beforeEach(t => {
-  const noop = reject => function noop(val, cb) {
+  const noop = reject => function(val, cb) {
     isFunction(val) && ([cb, val] = [val, null])
 
     if (reject) {
@@ -161,7 +161,8 @@ test("Should thow an error when \"reject\" argument is truthy.", async t => {
 
   const noop = pfy(t.context.noop(true))
 
-  await t.throws(noop(),
+  await t.throws(
+    noop(),
     "This function has been rejected cuz \"reject\" parameter is truthy."
   )
 })
