@@ -4,7 +4,7 @@ const test = require("ava")
 const {spy} = require("sinon")
 
 const pfy = require("./promisify")
-const {isArrayOf} = require("./helper")
+const {isArrayOf, isPlainObject} = require("./util")
 
 test.beforeEach(t => {
   const noop = reject => function(val, cb) {
@@ -182,6 +182,88 @@ test(
   }
 )
 
+test(
+  "Should throw a TypeError when promisify.some takes \"targets\" " +
+  "as non-object value",
+  t => {
+    const trap = () => pfy.some("oops, seems like this is not an object!")
+
+    const err = t.throws(trap)
+
+    t.true(err instanceof TypeError)
+    t.is(err.message, "Target functions should be passed as an object.")
+  }
+)
+
+test(
+  "Should throw a TypeError when promisify.some takes \"list\" " +
+  "as non-array value",
+  t => {
+    const trap = () => pfy.some(t.context.functions)
+
+    const err = t.throws(trap)
+
+    t.true(err instanceof TypeError)
+    t.is(err.message, "The filtering list should be an array.")
+  }
+)
+
+test(
+  "Should throw a TypeError when promisify.some takes \"list\" " +
+  "as non-string array value",
+  t => {
+    const trap = () => pfy.some(t.context.functions, [
+      "foo", null, 1337
+    ])
+
+    const err = t.throws(trap)
+
+    t.true(err instanceof TypeError)
+    t.is(err.message, "Each element in the list should be a string.")
+  }
+)
+
+test(
+  "Should throw a TypeError when promisify.except takes \"targets\" " +
+  "as non-object value",
+  t => {
+    const trap = () => pfy.except("oops, seems like this is not an object!")
+
+    const err = t.throws(trap)
+
+    t.true(err instanceof TypeError)
+    t.is(err.message, "Target functions should be passed as an object.")
+  }
+)
+
+test(
+  "Should throw a TypeError when promisify.except takes \"list\" " +
+  "as non-array value",
+  t => {
+    const trap = () => pfy.except(t.context.functions)
+
+    const err = t.throws(trap)
+
+    t.true(err instanceof TypeError)
+    t.is(err.message, "The filtering list should be an array.")
+  }
+)
+
+test(
+  "Should throw a TypeError when promisify.except takes \"list\" " +
+  "as non-string array value",
+  t => {
+    const trap = () => pfy.except(t.context.functions, [
+      "foo", null, 1337
+    ])
+
+    const err = t.throws(trap)
+
+    t.true(err instanceof TypeError)
+    t.is(err.message, "Each element in the list should be a string.")
+  }
+)
+
 // Tests for helpers
 test(
   "isArrayOf: Should return true when types of each elements are correct",
@@ -206,5 +288,55 @@ test(
     const predicate = val => typeof val === "string"
 
     t.false(isArrayOf(elements, predicate))
+  }
+)
+
+test("Should return a boolean value", t => {
+  t.plan(3)
+
+  t.is(typeof isPlainObject(), "boolean")
+
+  t.true(isPlainObject({}))
+  t.false(isPlainObject("I am waiting for you last summer"))
+})
+
+test(
+  "Should return false when passed non-object value, " +
+  "like some primitives of their constructors",
+  t => {
+    t.plan(8)
+
+    t.false(isPlainObject(null))
+    t.false(isPlainObject(undefined))
+    t.false(isPlainObject(void 0))
+
+    t.false(isPlainObject(0))
+    t.false(isPlainObject(42))
+    t.false(isPlainObject(new Number(2319))) // eslint-disable-line
+
+    t.false(isPlainObject("Some whatever string"))
+    // eslint-disable-next-line
+    t.false(isPlainObject(new String("Some whatever string")))
+  }
+)
+
+test("Should return false when passed Array or RegExp", t => {
+  t.plan(4)
+
+  t.false(isPlainObject([]))
+  t.false(isPlainObject(new Array())) // eslint-disable-line
+
+  t.false(isPlainObject(/.*/))
+  t.false(isPlainObject(new RegExp("/.*/")))
+})
+
+test(
+  "Should return true when passed an object literal or Object.create(null)",
+  t => {
+    t.plan(3)
+
+    t.true(isPlainObject({}))
+    t.true(isPlainObject(Object.create(null)))
+    t.true(isPlainObject(new Object({key: "value"}))) // eslint-disable-line
   }
 )

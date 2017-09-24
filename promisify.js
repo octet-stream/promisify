@@ -1,6 +1,4 @@
-const {isString, isObject} = require("util")
-
-const {isArrayOf, map} = require("./helper")
+const {isString, isPlainObject, isArrayOf, map} = require("./util")
 
 const isArray = Array.isArray
 
@@ -44,7 +42,7 @@ const promisify = (target, ctx = null) => function(...args) {
  * @return object
  */
 function all(targets, ctx) {
-  if (!isObject(targets)) {
+  if (!isPlainObject(targets)) {
     throw new TypeError("Target functions should be passed as an object.")
   }
 
@@ -59,8 +57,12 @@ function all(targets, ctx) {
  * @return object
  */
 function some(targets, list, ctx) {
+  if (!isPlainObject(targets)) {
+    throw new TypeError("Target functions should be passed as an object.")
+  }
+
   if (!isArray(list)) {
-    throw new TypeError("The list of target function should be an array.")
+    throw new TypeError("The filtering list should be an array.")
   }
 
   if (!isArrayOf(list, isString)) {
@@ -82,8 +84,12 @@ function some(targets, list, ctx) {
  * @return object
  */
 function except(targets, list, ctx) {
+  if (!isPlainObject(targets)) {
+    throw new TypeError("Target functions should be passed as an object.")
+  }
+
   if (!isArray(list)) {
-    throw new TypeError("The list of target function should be an array.")
+    throw new TypeError("The filtering list should be an array.")
   }
 
   if (!isArrayOf(list, isString)) {
