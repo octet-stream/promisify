@@ -8,6 +8,7 @@ const filter = name => /.+(Sync|Stream|Promise)$/.test(name) === false
  * Promisify Node.js callback-style function
  *
  * @param {function} target – a callback-style function
+ * @param {any} [ctx = null]
  *
  * @return {function} - promised function
  *
@@ -36,10 +37,10 @@ const promisify = (target, ctx = null) => function(...args) {
 /**
  * Promisify all given methods
  *
- * @param object targets - object that contains pairs of name => target
- * @param any ctx
+ * @param {object} targets - object that contains pairs of name => target
+ * @param {any} [ctx = null]
  *
- * @return object
+ * @return {object}
  */
 function all(targets, ctx) {
   if (!isPlainObject(targets)) {
@@ -50,11 +51,11 @@ function all(targets, ctx) {
 }
 
 /**
- * @param object targets
- * @param string[] list
- * @param any ctx
+ * @param {object} targets
+ * @param {string[]} list
+ * @param {any} [ctx = null]
  *
- * @return object
+ * @return {object}
  */
 function some(targets, list, ctx) {
   if (!isPlainObject(targets)) {
@@ -77,11 +78,11 @@ function some(targets, list, ctx) {
 }
 
 /**
- * @param object targets
- * @param string[] list
- * @param any ctx
+ * @param {object} targets
+ * @param {string[]} list
+ * @param {any} [ctx = null]
  *
- * @return object
+ * @return {object}
  */
 function except(targets, list, ctx) {
   if (!isPlainObject(targets)) {
