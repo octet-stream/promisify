@@ -45,4 +45,4 @@ function map(obj, fn) {
   return res
 }
 
-module.exports = {isArrayOf, isString, isPlainObject, map}
+module.exports = {isArrayOf, getType, isString, isPlainObject, map}

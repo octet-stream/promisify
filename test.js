@@ -51,6 +51,8 @@ test("Should return a promisify function", t => {
 
   const noop = pfy(t.context.noop())
 
+  console.log(noop.name)
+
   t.true(isFunction(noop))
   t.true(noop() instanceof Promise)
 })
@@ -156,7 +158,18 @@ test(
   }
 )
 
-test("Should thow an error when \"reject\" argument is truthy.", async t => {
+test("Should throw TypeError when given target is not a function", t => {
+  t.plan(3)
+
+  const trap = () => pfy("Oops! That's totally not a function")
+
+  const err = t.throws(trap)
+
+  t.true(err instanceof TypeError)
+  t.is(err.message, "Expected target function. Received string")
+})
+
+test("Should thow an error when \"reject\" argument is truthy", async t => {
   t.plan(1)
 
   const noop = pfy(t.context.noop(true))

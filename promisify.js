@@ -1,8 +1,18 @@
-const {isString, isPlainObject, isArrayOf, map} = require("./util")
+const {isString, getType, isPlainObject, isArrayOf, map} = require("./util")
 
 const isArray = Array.isArray
 
 const filter = name => /.+(Sync|Stream|Promise)$/.test(name) === false
+
+const tryWrap = target => wrapper => {
+  if (typeof target !== "function") {
+    throw TypeError(
+      `Expected target function. Received ${getType(target)}`
+    )
+  }
+
+  return wrapper
+}
 
 /**
  * Promisify Node.js callback-style function
@@ -24,7 +34,7 @@ const filter = name => /.+(Sync|Stream|Promise)$/.test(name) === false
  *
  * readFile(__filename).then(onFulfilled, onRejected)
  */
-const promisify = (target, ctx = null) => function(...args) {
+const promisify = (target, ctx = null) => tryWrap(target)((...args) => {
   ctx || (ctx = this)
 
   return new Promise((resolve, reject) => {
@@ -32,12 +42,12 @@ const promisify = (target, ctx = null) => function(...args) {
 
     target.call(ctx, ...args, fulfill)
   })
-}
+})
 
 /**
  * Promisify all given methods
  *
- * @param {object} targets - object that contains pairs of name => target
+ * @param {object} targets - object with the pairs of name => target
  * @param {any} [ctx = null]
  *
  * @return {object}
