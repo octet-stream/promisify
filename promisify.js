@@ -5,7 +5,7 @@ const isArray = Array.isArray
 const filter = name => /.+(Sync|Stream|Promise)$/.test(name) === false
 
 const tryWrap = target => wrapper => {
-  if (typeof target !== "function") {
+  if (getType(target) !== "function") {
     throw TypeError(
       `Expected target function. Received ${getType(target)}`
     )
