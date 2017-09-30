@@ -45,7 +45,7 @@
   "size-limit": [
     {
       "path": "promisify.js",
-      "limit": "589 B"
+      "limit": "583 B"
     }
   ],
   "engines": {
