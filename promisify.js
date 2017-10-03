@@ -54,7 +54,9 @@ const promisify = (target, ctx = null) => tryWrap(target)((...args) => {
  */
 function all(targets, ctx) {
   if (!isPlainObject(targets)) {
-    throw new TypeError("Target functions should be passed as an object.")
+    throw new TypeError(
+      `Expected a plain object as targets. Received ${getType(targets)}`
+    )
   }
 
   return map(targets, (fn, name) => filter(name) ? promisify(fn, ctx) : fn)
@@ -69,11 +71,13 @@ function all(targets, ctx) {
  */
 function some(targets, list, ctx) {
   if (!isPlainObject(targets)) {
-    throw new TypeError("Target functions should be passed as an object.")
+    throw new TypeError(
+      `Expected a plain object as targets. Received ${getType(targets)}`
+    )
   }
 
   if (!isArray(list)) {
-    throw new TypeError("The filtering list should be an array.")
+    throw new TypeError(`Expected list as an array. Received ${getType(list)}`)
   }
 
   if (!isArrayOf(list, isString)) {
@@ -96,11 +100,13 @@ function some(targets, list, ctx) {
  */
 function except(targets, list, ctx) {
   if (!isPlainObject(targets)) {
-    throw new TypeError("Target functions should be passed as an object.")
+    throw new TypeError(
+      `Expected a plain object as targets. Received ${getType(targets)}`
+    )
   }
 
   if (!isArray(list)) {
-    throw new TypeError("The filtering list should be an array.")
+    throw new TypeError(`Expected list as an array. Received ${getType(list)}`)
   }
 
   if (!isArrayOf(list, isString)) {

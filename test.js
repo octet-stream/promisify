@@ -191,7 +191,7 @@ test(
     const err = t.throws(trap)
 
     t.true(err instanceof TypeError)
-    t.is(err.message, "Target functions should be passed as an object.")
+    t.is(err.message, "Expected a plain object as targets. Received string")
   }
 )
 
@@ -204,7 +204,7 @@ test(
     const err = t.throws(trap)
 
     t.true(err instanceof TypeError)
-    t.is(err.message, "Target functions should be passed as an object.")
+    t.is(err.message, "Expected a plain object as targets. Received string")
   }
 )
 
@@ -217,7 +217,7 @@ test(
     const err = t.throws(trap)
 
     t.true(err instanceof TypeError)
-    t.is(err.message, "The filtering list should be an array.")
+    t.is(err.message, "Expected list as an array. Received undefined")
   }
 )
 
@@ -245,7 +245,7 @@ test(
     const err = t.throws(trap)
 
     t.true(err instanceof TypeError)
-    t.is(err.message, "Target functions should be passed as an object.")
+    t.is(err.message, "Expected a plain object as targets. Received string")
   }
 )
 
@@ -258,7 +258,7 @@ test(
     const err = t.throws(trap)
 
     t.true(err instanceof TypeError)
-    t.is(err.message, "The filtering list should be an array.")
+    t.is(err.message, "Expected list as an array. Received undefined")
   }
 )
 
