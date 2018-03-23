@@ -10,3 +10,5 @@ test.js
 .gitignore
 .eslintrc.json
 .travis.yml
+.lintstagedrc
+.editorconfig

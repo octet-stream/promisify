@@ -2,7 +2,7 @@ const {isString, getType, isPlainObject, isArrayOf, map} = require("./util")
 
 const isArray = Array.isArray
 
-const filter = name => /.+(Sync|Stream|Promise)$/.test(name) === false
+const filter = name => !(/.+(Sync|Stream|Promise)$/.test(name))
 
 const tryWrap = target => wrapper => {
   if (getType(target) !== "function") {
@@ -115,7 +115,7 @@ function except(targets, list, ctx) {
 
   return map(
     targets, (fn, name) => (
-      filter(name) && list.includes(name) === false ? promisify(fn, ctx) : fn
+      filter(name) && !(list.includes(name)) ? promisify(fn, ctx) : fn
     )
   )
 }
