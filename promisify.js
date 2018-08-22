@@ -34,15 +34,13 @@ const tryWrap = target => wrapper => {
  *
  * readFile(__filename).then(onFulfilled, onRejected)
  */
-const promisify = (target, ctx = null) => tryWrap(target)((...args) => {
-  ctx || (ctx = this)
-
-  return new Promise((resolve, reject) => {
+const promisify = (target, ctx = null) => tryWrap(target)((...args) => (
+  new Promise((resolve, reject) => {
     const fulfill = (err, res) => err ? reject(err) : resolve(res)
 
     target.call(ctx, ...args, fulfill)
   })
-})
+))
 
 /**
  * Promisify all given methods
