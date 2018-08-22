@@ -4,16 +4,6 @@ const isArray = Array.isArray
 
 const filter = name => !(/.+(Sync|Stream|Promise)$/.test(name))
 
-const tryWrap = target => wrapper => {
-  if (getType(target) !== "function") {
-    throw TypeError(
-      `Expected target function. Received ${getType(target)}`
-    )
-  }
-
-  return wrapper
-}
-
 /**
  * Promisify Node.js callback-style function
  *
@@ -34,13 +24,23 @@ const tryWrap = target => wrapper => {
  *
  * readFile(__filename).then(onFulfilled, onRejected)
  */
-const promisify = (target, ctx = null) => tryWrap(target)((...args) => (
-  new Promise((resolve, reject) => {
-    const fulfill = (err, res) => err ? reject(err) : resolve(res)
+function promisify(target, ctx = null) {
+  if (typeof target !== "function") {
+    throw TypeError(
+      `Expected target function. Received ${getType(target)}`
+    )
+  }
 
-    target.call(ctx, ...args, fulfill)
-  })
-))
+  return function(...args) {
+    ctx || (ctx = this)
+
+    return new Promise((resolve, reject) => {
+      const fulfill = (err, res) => err ? reject(err) : resolve(res)
+
+      target.call(ctx, ...args, fulfill)
+    })
+  }
+}
 
 /**
  * Promisify all given methods
