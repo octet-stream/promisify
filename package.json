@@ -37,10 +37,10 @@
     "limit": "node_modules/.bin/size-limit",
     "test": "node_modules/.bin/ava test.js",
     "codecov": "node_modules/.bin/codecov",
-    "coverage": "node_modules/.bin/nyc yarn test",
-    "report": "yarn coverage && node_modules/.bin/nyc report --reporter=html yarn test",
-    "report:ci": "yarn coverage && node_modules/.bin/nyc report --reporter=lcov yarn test",
-    "ci": "yarn report:ci && yarn codecov"
+    "coverage": "node_modules/.bin/nyc npm run test",
+    "report": "npm run coverage && node_modules/.bin/nyc report --reporter=html npm run test",
+    "report:ci": "npm run coverage && node_modules/.bin/nyc report --reporter=lcov npm run test",
+    "ci": "npm run report:ci && npm run codecov"
   },
   "engines": {
     "node": "6.x || >=8.x"
