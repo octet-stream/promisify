@@ -8,7 +8,9 @@ test.js
 .DS_Store
 .git
 .gitignore
+.size-limit.js
 .eslintrc.json
+.huskyrc.json
 .travis.yml
 .lintstagedrc
 .editorconfig

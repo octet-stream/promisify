@@ -1,6 +1,6 @@
 {
   "name": "@octetstream/promisify",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Tiny, dependency free promisify library.",
   "main": "promisify.js",
   "types": "promisify.d.ts",
