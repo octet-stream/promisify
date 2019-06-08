@@ -51,8 +51,6 @@ test("Should return a promisify function", t => {
 
   const noop = pfy(t.context.noop())
 
-  console.log(noop.name)
-
   t.true(isFunction(noop))
   t.true(noop() instanceof Promise)
 })
@@ -174,7 +172,7 @@ test("Should thow an error when \"reject\" argument is truthy", async t => {
 
   const noop = pfy(t.context.noop(true))
 
-  await t.throws(
+  await t.throwsAsync(
     noop(),
     "This function has been rejected cuz \"reject\" parameter is truthy."
   )

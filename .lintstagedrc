@@ -1,3 +1,6 @@
 {
-  "./*.js": "node_modules/.bin/eslint --fix"
+  ".size-limit.js": "node_modules/.bin/eslint",
+  "promisify.js": "node_modules/.bin/eslint",
+  "test.js": "node_modules/.bin/eslint",
+  "util.js": "node_modules/.bin/eslint",
 }
