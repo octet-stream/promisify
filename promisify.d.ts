@@ -1,7 +1,7 @@
 declare function promisify(target: Function, ctx?: any): Function
 
 declare namespace promisify {
-  declare type Targets {
+  type Targets = {
     [key: string]: Function
   }
 
