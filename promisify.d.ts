@@ -1,13 +1,13 @@
-declare function promisify(target: Function, ctx?: any): Function
+interface Targets {
+  [key: string]: Function
+}
 
-declare namespace promisify {
-  type Targets = {
-    [key: string]: Function
-  }
+export default interface Promisify {
+  (target: Function, ctx?: any): Function
 
-  export function all(targets: Targets, ctx?: any): Targets
+  all(targets: Targets, ctx?: any): Targets
 
-  export function some(targets: Targets, list: string[], ctx?: any): Targets
+  some(targets: Targets, list: string[], ctx?: any): Targets
 
-  export function except(targets: Targets, list: string[], ctx?: any): Targets
+  except(targets: Targets, list: string[], ctx?: any): Targets
 }
