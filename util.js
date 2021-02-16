@@ -1,4 +1,4 @@
-const keys = Object.keys
+const {keys} = Object
 
 const toString = val => Object.prototype.toString.call(val)
 

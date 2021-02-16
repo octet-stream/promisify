@@ -1,6 +1,6 @@
 const {isString, getType, isPlainObject, isArrayOf, map} = require("./util")
 
-const isArray = Array.isArray
+const {isArray} = Array
 
 const filter = name => !(/.+(Sync|Stream|Promise)$/.test(name))
 
@@ -31,7 +31,8 @@ function promisify(target, ctx = null) {
     )
   }
 
-  return function(...args) {
+  // eslint-disable-next-line func-names
+  return function (...args) {
     ctx || (ctx = this)
 
     return new Promise((resolve, reject) => {
