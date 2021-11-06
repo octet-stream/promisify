@@ -2,8 +2,11 @@ node_modules
 coverage
 
 yarn.lock
+package-lock.json
+pnpm-lock.yaml
 test.js
 
+.husky
 .nyc_output
 .DS_Store
 .git

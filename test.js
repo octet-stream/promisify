@@ -4,10 +4,11 @@ const test = require("ava")
 const {spy} = require("sinon")
 
 const pfy = require("./promisify")
+
 const {isArrayOf, isPlainObject} = require("./util")
 
 test.beforeEach(t => {
-  const noop = reject => function(val, cb) {
+  const noop = reject => (val, cb) => {
     isFunction(val) && ([cb, val] = [val, null])
 
     if (reject) {
@@ -58,7 +59,8 @@ test("Should return a promisify function", t => {
 test("Should pass a \"fulfill\" function as last parameter", async t => {
   t.plan(3)
 
-  const getLastElement = t.context.getLastElement
+  const {getLastElement} = t.context
+
   const noop = spy(t.context.noop())
   const callee = pfy(noop)
 
@@ -104,7 +106,7 @@ test("Should invoke function with a given context", async t => {
 test("Should wrap all function from given object", t => {
   t.plan(5)
 
-  const functions = t.context.functions
+  const {functions} = t.context
 
   const actual = pfy.all(functions)
 
@@ -120,7 +122,7 @@ test("Should wrap all function from given object", t => {
 test("Should wrap some functions that were specified in a list", t => {
   t.plan(5)
 
-  const functions = t.context.functions
+  const {functions} = t.context
 
   const list = ["bar"]
 
@@ -140,7 +142,7 @@ test(
   t => {
     t.plan(5)
 
-    const functions = t.context.functions
+    const {functions} = t.context
 
     const list = ["foo"]
 
@@ -172,15 +174,13 @@ test("Should thow an error when \"reject\" argument is truthy", async t => {
 
   const noop = pfy(t.context.noop(true))
 
-  await t.throwsAsync(
-    noop(),
-    "This function has been rejected cuz \"reject\" parameter is truthy."
-  )
+  await t.throwsAsync(noop())
 })
 
 test(
-  "Should throw an error when promisify.all takes non-object value " +
-  "first argument",
+  "Should throw an error when promisify.all takes non-object value "
+    + "first argument",
+
   t => {
     t.plan(3)
 
@@ -194,8 +194,9 @@ test(
 )
 
 test(
-  "Should throw a TypeError when promisify.some takes \"targets\" " +
-  "as non-object value",
+  "Should throw a TypeError when promisify.some takes \"targets\" "
+    + "as non-object value",
+
   t => {
     const trap = () => pfy.some("oops, seems like this is not an object!")
 
@@ -207,8 +208,9 @@ test(
 )
 
 test(
-  "Should throw a TypeError when promisify.some takes \"list\" " +
-  "as non-array value",
+  "Should throw a TypeError when promisify.some takes \"list\" "
+    + "as non-array value",
+
   t => {
     const trap = () => pfy.some(t.context.functions)
 
@@ -220,8 +222,9 @@ test(
 )
 
 test(
-  "Should throw a TypeError when promisify.some takes \"list\" " +
-  "as non-string array value",
+  "Should throw a TypeError when promisify.some takes \"list\" "
+    + "as non-string array value",
+
   t => {
     const trap = () => pfy.some(t.context.functions, [
       "foo", null, 1337
@@ -235,8 +238,9 @@ test(
 )
 
 test(
-  "Should throw a TypeError when promisify.except takes \"targets\" " +
-  "as non-object value",
+  "Should throw a TypeError when promisify.except takes \"targets\" "
+    + "as non-object value",
+
   t => {
     const trap = () => pfy.except("oops, seems like this is not an object!")
 
@@ -248,8 +252,9 @@ test(
 )
 
 test(
-  "Should throw a TypeError when promisify.except takes \"list\" " +
-  "as non-array value",
+  "Should throw a TypeError when promisify.except takes \"list\" "
+    + "as non-array value",
+
   t => {
     const trap = () => pfy.except(t.context.functions)
 
@@ -261,8 +266,9 @@ test(
 )
 
 test(
-  "Should throw a TypeError when promisify.except takes \"list\" " +
-  "as non-string array value",
+  "Should throw a TypeError when promisify.except takes \"list\" "
+    + "as non-string array value",
+
   t => {
     const trap = () => pfy.except(t.context.functions, [
       "foo", null, 1337
@@ -278,6 +284,7 @@ test(
 // Tests for helpers
 test(
   "isArrayOf: Should return true when types of each elements are correct",
+
   t => {
     t.plan(1)
 
@@ -312,8 +319,9 @@ test("Should return a boolean value", t => {
 })
 
 test(
-  "Should return false when passed non-object value, " +
-  "like some primitives of their constructors",
+  "Should return false when passed non-object value, "
+    + "like some primitives of their constructors",
+
   t => {
     t.plan(8)
 

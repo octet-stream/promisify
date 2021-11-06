@@ -2,6 +2,12 @@
   "name": "@octetstream/promisify",
   "version": "2.0.2",
   "description": "Tiny, dependency free promisify library.",
+  "exports": {
+    ".": {
+      "import": "./promisify.mjs",
+      "require": "./promisify.js"
+    }
+  },
   "main": "promisify.js",
   "types": "promisify.d.ts",
   "author": "Nick K.",
@@ -32,31 +38,32 @@
   ],
   "repository": "octet-stream/promisify",
   "scripts": {
-    "lint": "node_modules/.bin/eslint test.js helper.js",
-    "staged": "node_modules/.bin/lint-staged",
-    "limit": "node_modules/.bin/size-limit",
-    "test": "node_modules/.bin/ava test.js",
-    "codecov": "node_modules/.bin/codecov",
-    "coverage": "node_modules/.bin/nyc npm test",
-    "report": "npm run coverage && node_modules/.bin/nyc report --reporter=html",
-    "report:ci": "npm run coverage && node_modules/.bin/nyc report --reporter=lcov",
-    "ci": "npm run report:ci && npm run codecov"
+    "lint": "eslint promisify.js promisify.mjs test.js util.js",
+    "staged": "lint-staged",
+    "limit": "size-limit",
+    "test": "ava --fail-fast",
+    "coverage": "c8 npm test",
+    "report:html": "c8 -r=html npm test",
+    "ci": "c8 npm test && c8 report --reporter=json",
+    "prepublishOnly": "pinst --disable",
+    "postpublish": "pinst --enable"
   },
   "engines": {
-    "node": ">= 8 < 9 || >= 10 < 11 || >= 12"
+    "node": ">= 8"
   },
   "devDependencies": {
     "@octetstream/eslint-config": "5.0.0",
-    "@size-limit/preset-small-lib": "^4.9.2",
+    "@size-limit/preset-small-lib": "^4.12.0",
     "ava": "3.15.0",
-    "c8": "^7.5.0",
-    "codecov": "3.8.1",
+    "c8": "^7.10.0",
     "eslint": "7.20.0",
     "eslint-plugin-ava": "11.0.0",
-    "husky": "^5.0.9",
-    "lint-staged": "^10.5.4",
+    "husky": "^7.0.4",
+    "lint-staged": "^11.2.6",
     "nyc": "15.1.0",
-    "sinon": "9.2.4",
+    "pinst": "^2.1.6",
+    "sinon": "12.0.1",
+    "size-limit": "^6.0.4",
     "tsd": "^0.14.0"
   }
 }

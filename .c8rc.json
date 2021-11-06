@@ -1,0 +1,4 @@
+{
+  "include": ["promisify.js", "util.js"],
+  "exclude": ["*.test.js"]
+}

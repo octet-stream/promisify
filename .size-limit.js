@@ -1,6 +1,6 @@
 module.exports = [
   {
     path: "promisify.js",
-    limit: "547 B"
+    limit: "548 B"
   }
 ]
